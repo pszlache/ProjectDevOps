@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - back_net
+
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops
+      POSTGRES_DB: devops_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - back_net
+
+networks:
+  back_net:
+
+volumes:
+  db_data:
