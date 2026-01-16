@@ -12,6 +12,32 @@ services:
       - front_net
       - back_net
 
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops
+      POSTGRES_DB: devops_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - back_net
+
+  migration_runner:
+    image: projectdevops-app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: devops_db
+      DB_USER: devops
+      DB_PASSWORD: devops
+    command: ["python", "migrations/run_migrations.py"]
+    restart: "no"
+    networks:
+      - back_net
+
   nginx:
     image: nginx:1.25
     container_name: nginx_proxy
@@ -25,18 +51,6 @@ services:
     restart: always
     networks:
       - front_net
-
-  db:
-    image: postgres:16
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: devops
-      POSTGRES_PASSWORD: devops
-      POSTGRES_DB: devops_db
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - back_net
 
   seed_runner:
     image: projectdevops-app

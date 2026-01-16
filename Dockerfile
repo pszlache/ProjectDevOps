@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/src ./src
 COPY app/tests ./tests
 COPY app/seed ./seed
+COPY app/migrations ./migrations
 
 # ---------- STAGE 2: test ----------
 
@@ -26,6 +27,7 @@ COPY --from=builder /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/seed ./seed
+COPY --from=builder /app/migrations ./migrations
 
 EXPOSE 5000
 
