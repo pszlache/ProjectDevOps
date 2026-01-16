@@ -1,13 +1,15 @@
-version: "3.9"
-
 services:
   app:
-    build: .
-    ports:
-      - "5000:5000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: projectdevops-app
+    expose:
+      - "5000"
     depends_on:
       - db
     networks:
+      - front_net
       - back_net
 
   nginx:
@@ -20,6 +22,7 @@ services:
       - nginx_logs:/var/log/nginx
     depends_on:
       - app
+    restart: always
     networks:
       - front_net
 
@@ -35,6 +38,22 @@ services:
     networks:
       - back_net
 
+  seed_runner:
+    image: projectdevops-app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: devops_db
+      DB_USER: devops
+      DB_PASSWORD: devops
+    volumes:
+      - seed_output:/seed_output
+    command: ["python", "seed/run_seed.py"]
+    restart: "no"
+    networks:
+      - back_net
+
 networks:
   front_net:
   back_net:
@@ -42,3 +61,5 @@ networks:
 volumes:
   db_data:
   nginx_logs:
+  seed_output:
+
