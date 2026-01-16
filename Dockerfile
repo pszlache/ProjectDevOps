@@ -8,9 +8,17 @@ COPY app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/src ./src
+COPY app/tests ./tests
 
+# ---------- STAGE 2: test ----------
 
-# ---------- STAGE 2: final ----------
+FROM builder AS test
+
+WORKDIR /app
+
+CMD ["pytest", "tests"]
+
+# ---------- STAGE 3: final ----------
 FROM python:3.12-slim AS final
 
 WORKDIR /app
