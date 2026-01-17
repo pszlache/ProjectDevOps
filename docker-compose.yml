@@ -27,7 +27,8 @@ services:
   migration_runner:
     image: projectdevops-app
     depends_on:
-      - db
+      db:
+        condition: service_started
     environment:
       DB_HOST: db
       DB_NAME: devops_db
@@ -55,7 +56,8 @@ services:
   seed_runner:
     image: projectdevops-app
     depends_on:
-      - db
+      migration_runner:
+        condition: service_completed_successfully
     environment:
       DB_HOST: db
       DB_NAME: devops_db
