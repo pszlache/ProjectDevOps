@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/pszlache/projectdevops-app:latest
+    image: ghcr.io/pszlache/projectdevops:latest
     expose:
       - "5000"
     depends_on:
@@ -25,7 +25,7 @@ services:
       - back_net
 
   migration_runner:
-    image: ghcr.io/pszlache/projectdevops-app:latest
+    image: ghcr.io/pszlache/projectdevops:latest
     depends_on:
       db:
         condition: service_started
@@ -54,7 +54,7 @@ services:
       - front_net
 
   seed_runner:
-    image: ghcr.io/pszlache/projectdevops-app:latest
+    image: ghcr.io/pszlache/projectdevops:latest
     depends_on:
       migration_runner:
         condition: service_completed_successfully
