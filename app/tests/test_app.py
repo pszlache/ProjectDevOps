@@ -1,19 +1,24 @@
 import pytest
-from app.src.main import app
+from src.main import app
 
 @pytest.fixture
 def client():
     app.testing = True
-    return app.test_client()
+    with app.test_client() as client:
+        yield client
 
-def test_unit_example():
-    assert 1 + 1 == 2
+
+def test_index_returns_200(client):
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+def test_index_content(client):
+    response = client.get("/")
+    assert b"ProjectDevOps" in response.data
+
 
 def test_health_endpoint(client):
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json["status"] == "ok"
-
-def test_root_endpoint(client):
-    response = client.get("/")
-    assert response.status_code == 200
+    assert response.json == {"status": "ok"}
