@@ -26,13 +26,13 @@ def wait_for_db():
                 password=DB_PASSWORD,
             )
             conn.close()
-            print("✅ Database is ready")
+            print("Database is ready")
             return
         except psycopg2.OperationalError:
-            print(f"⏳ DB not ready yet... retry {attempt}/{MAX_RETRIES}")
+            print(f"DB not ready yet... retry {attempt}/{MAX_RETRIES}")
             time.sleep(RETRY_DELAY)
 
-    raise RuntimeError("❌ Database not available after retries")
+    raise RuntimeError("Database not available after retries")
 
 
 def run_migrations():
